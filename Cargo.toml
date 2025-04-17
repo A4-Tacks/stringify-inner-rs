@@ -1,0 +1,16 @@
+[package]
+name = "stringify-inner"
+version = "0.1.0"
+edition = "2021"
+
+authors = ["A4-Tacks <wdsjxhno1001@163.com>"]
+keywords = ["stringify", "concat", "proc-macro", "macros"]
+categories = ["no-std", "no-std::no-alloc"]
+description = "Translate #stringify for use in places where stringify! is not supported"
+
+license = "MIT"
+repository = "https://github.com/A4-Tacks/stringify-inner-rs"
+readme = "README.md"
+
+[lib]
+proc-macro = true
