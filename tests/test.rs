@@ -17,6 +17,19 @@ fn test_expr() {
     assert_eq!(sexpr!(#concat(r"foo\n", "\nbar")), "foo\\n\nbar");
     assert_eq!(sexpr!(#concat(r#"foo\n"#, "\nbar")), "foo\\n\nbar");
     assert_eq!(sexpr!(#concat(r"foo\n", "\nbar")), "foo\\n\nbar");
+    assert_eq!(sexpr!(#concat(r"foo\n", "\nbar", "\nbaz")), "foo\\n\nbar\nbaz");
+    assert_eq!(sexpr!(#concat()), "");
+    assert_eq!(sexpr!(#concat("a", "b")), "ab");
+    assert_eq!(sexpr!(#concat("a", ".\"b")), "a.\"b");
+    assert_eq!(sexpr!(#stringify()), "");
+    assert_eq!(sexpr!(#stringify(+ +)), "+ +");
+    assert_eq!(sexpr!(#stringify(+  +)), "+ +");
+    assert_eq!(sexpr!(#stringify(++)), "++");
+    assert_eq!(sexpr!(#stringify(++)), stringify!(++));
+    assert_eq!(sexpr!(#stringify(+ +)), stringify!(+ +));
+    assert_eq!(sexpr!(#stringify(=>)), stringify!(=>));
+    assert_eq!(sexpr!(#stringify(1+2)), stringify!(1+2));
+    assert_eq!(sexpr!(#stringify(1+ 2)), stringify!(1+ 2));
 }
 
 #[sexpr_attr(doc(alias = #stringify(foo)))]
