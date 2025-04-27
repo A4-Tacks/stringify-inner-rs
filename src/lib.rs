@@ -91,6 +91,7 @@ fn do_operation(
             let TokenTree::Group(param) = param else {
                 return err("invalid operation param", param.span());
             };
+            let gspan = param.span();
 
             match &*ident.to_string() {
                 "stringify" => {
@@ -105,15 +106,20 @@ fn do_operation(
                 "concat" => {
                     let param = expr_impl(param.stream())?;
                     let mut s = Literal::string("");
+                    let mut span = None;
                     let mut iter = param.into_iter().peekable();
+
                     while let Some(tt) = iter.next() {
                         iter.next_if(|p| matches!(p,
                                 TokenTree::Punct(p) if p.as_char() == ','));
                         let TokenTree::Literal(lit) = tt else {
                             return err("is not a literal", tt.span());
                         };
+                        span.get_or_insert(lit.span());
                         s = merge_str(&s, &lit)?;
                     }
+
+                    s.set_span(span.unwrap_or(gspan));
                     stream([TokenTree::from(s)])
                 },
                 _ => return err("unknown operator", ident.span()),
