@@ -67,15 +67,17 @@ fn do_operation(
     iter: &mut impl Iterator<Item = TokenTree>,
 ) -> Result<TokenStream, TokenStream> {
     let Some(op) = iter.next() else {
-        return err("unexpected end of input", tok.span());
+        return Ok(stream([tok]));
     };
+    let degrade = || stream([tok.clone(), op.clone()]);
     Ok(match op {
-        TokenTree::Punct(ref punct) => {
-            if punct.as_char() == '#' {
-                stream([op])
-            } else {
-                return err("invalid operator", punct.span());
-            }
+        TokenTree::Punct(ref punct)
+            if punct.as_char() == '#' =>
+        {
+            stream([op])
+        },
+        TokenTree::Punct(_) => {
+            degrade()
         },
         TokenTree::Group(_) => {
             stream([
@@ -83,13 +85,13 @@ fn do_operation(
                 expr_impl(stream([op]))?,
             ])
         },
-        TokenTree::Literal(tt) => return err("invalid operator", tt.span()),
-        TokenTree::Ident(ident) => {
+        TokenTree::Literal(_) => degrade(),
+        TokenTree::Ident(ref ident) => {
             let Some(param) = iter.next() else {
-                return err("unexpected end of input", ident.span());
+                return Ok(degrade());
             };
             let TokenTree::Group(param) = param else {
-                return err("invalid operation param", param.span());
+                return Ok(degrade());
             };
             let gspan = param.span();
 
@@ -122,7 +124,7 @@ fn do_operation(
                     s.set_span(span.unwrap_or(gspan));
                     stream([TokenTree::from(s)])
                 },
-                _ => return err("unknown operator", ident.span()),
+                _ => return Ok(degrade()),
             }
         },
     })
