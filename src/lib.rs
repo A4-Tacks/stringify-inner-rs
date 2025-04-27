@@ -91,7 +91,7 @@ fn do_operation(
                 return Ok(degrade());
             };
             let TokenTree::Group(param) = param else {
-                return Ok(degrade());
+                return err("invalid operation param", param.span());
             };
             let gspan = param.span();
 
