@@ -1,3 +1,5 @@
+#![deny(unreachable_patterns)]
+
 use stringify_inner::{sexpr, sexpr_attr};
 
 #[test]
@@ -30,6 +32,12 @@ fn test_expr() {
     assert_eq!(sexpr!(#stringify(=>)), stringify!(=>));
     assert_eq!(sexpr!(#stringify(1+2)), stringify!(1+2));
     assert_eq!(sexpr!(#stringify(1+ 2)), stringify!(1+ 2));
+    assert_eq!(sexpr!((#stringify(1+ 2))), stringify!(1+ 2));
+    assert_eq!(sexpr!({#stringify(1+ 2)}), stringify!(1+ 2));
+    assert_eq!(sexpr!(match () {
+        #[cfg(not(test))] () => stringify!(1),
+        #[cfg(test)] () => #stringify(2),
+    }), "2");
 }
 
 #[sexpr_attr(doc(alias = #stringify(foo)))]
