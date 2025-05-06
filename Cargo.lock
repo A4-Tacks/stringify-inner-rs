@@ -4,13 +4,13 @@ version = 4
 
 [[package]]
 name = "proc-macro-tool"
-version = "0.1.0"
+version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6641cd5e86ba17f9b5408b4de680ac3e2e397f1ea4a6f02dace331aa8da00658"
+checksum = "bd3252ce8c0b48a108bbce502fd13403eceb7b27d0120080f9ebcb6222f7b2c2"
 
 [[package]]
 name = "stringify-inner"
-version = "0.3.0"
+version = "0.3.1"
 dependencies = [
  "proc-macro-tool",
 ]
